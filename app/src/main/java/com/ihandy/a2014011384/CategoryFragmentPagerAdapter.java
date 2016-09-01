@@ -11,9 +11,7 @@ import java.util.List;
 /**
  * Created by lenovo on 2016/9/1.
  */
-public class SampleFragmentPagerAdapter extends FragmentPagerAdapter {
-    final int PAGE_COUNT = 3;
-    private String tabTitles[] = new String[] { "Tab1", "Tab2", "Tab3" };
+public class CategoryFragmentPagerAdapter extends FragmentPagerAdapter {
     private Context context;
 
     private static List<Category> category = null;
@@ -23,7 +21,7 @@ public class SampleFragmentPagerAdapter extends FragmentPagerAdapter {
         category = arr;
     }
 
-    public SampleFragmentPagerAdapter(FragmentManager fm, Context context) {
+    public CategoryFragmentPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         this.context = context;
     }
@@ -43,5 +41,10 @@ public class SampleFragmentPagerAdapter extends FragmentPagerAdapter {
         // Generate title based on item position
         //return tabTitles[position];
         return category.get(position).title;
+    }
+
+    public static int getSize()
+    {
+        return category.size();
     }
 }
