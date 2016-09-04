@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -75,9 +76,11 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_main);
+
         getSupportActionBar().hide();
 
-        setContentView(R.layout.activity_main);
+        ListAdapter.context = this;
         SQLHelper.onCreate(this);
 
         createCategory();
