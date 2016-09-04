@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -27,6 +28,17 @@ public class MainActivity extends AppCompatActivity
 {
     static String res = "";
 
+    void setupTab()
+    {
+        // Get the ViewPager and set it's PagerAdapter so that it can display items
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new CategoryFragmentPagerAdapter(getSupportFragmentManager(),MainActivity.this));
+
+        // Give the TabLayout the ViewPager
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
     protected void createCategory() {
         Map<String, String> map = new HashMap();
         map.put("timestamp", System.currentTimeMillis() + "");
@@ -34,6 +46,10 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onFailure(Call call, IOException e) {
                 System.out.println("No Network");
+                List<Category> res = SQLHelper.readPreferCategory();
+                CategoryFragmentPagerAdapter.setCategory(res);
+
+                setupTab();
             }
 
             @Override
@@ -42,15 +58,13 @@ public class MainActivity extends AppCompatActivity
                 MainRunner.run(getMainLooper(), new Runnable() {
                     @Override
                     public void run() {
-                        CategoryFragmentPagerAdapter.setCategory(NewsGetter.getCategory(str));
-                        // Get the ViewPager and set it's PagerAdapter so that it can display items
-                        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-                        viewPager.setAdapter(new CategoryFragmentPagerAdapter(getSupportFragmentManager(),
-                                MainActivity.this));
+                        List<Category> res  = NewsGetter.getCategory(str);
 
-                        // Give the TabLayout the ViewPager
-                        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-                        tabLayout.setupWithViewPager(viewPager);
+                        SQLHelper.saveCategory(res);
+                        res = SQLHelper.readPreferCategory();
+                        CategoryFragmentPagerAdapter.setCategory(res);
+
+                        setupTab();
                     }
                 });
             }
@@ -60,18 +74,22 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getSupportActionBar().hide();
+
         setContentView(R.layout.activity_main);
+        SQLHelper.onCreate(this);
 
         createCategory();
     }
 
-    private static double prex = 0, prey =0;
+    private static double prex = 0, prey = 0;
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
 
         int action = MotionEventCompat.getActionMasked(event);
-        System.out.println(event);
+        //System.out.println(event);
         switch (action)
         {
             case (MotionEvent.ACTION_DOWN) :

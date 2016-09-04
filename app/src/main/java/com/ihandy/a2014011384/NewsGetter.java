@@ -1,5 +1,6 @@
 package com.ihandy.a2014011384;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -39,6 +40,24 @@ public class NewsGetter {
                 it.remove();
             }
             System.out.println(result);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    public static List<News> getNewsByCategory(String content)
+    {
+        List<News> result = null;
+        try {
+            JSONArray json = new JSONObject(content).getJSONObject("data").getJSONArray("news");
+            for (int a=0;a<json.length();a++)
+            {
+                JSONObject obj = json.getJSONObject(a);
+                result.add(new News(obj));
+                System.out.println(result);
+            }
         }
         catch (Exception e)
         {
