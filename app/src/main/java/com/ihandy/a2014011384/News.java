@@ -13,6 +13,9 @@ public class News {
     String origin;
     String source;
     String title;
+    News()
+    {
+    }
     News(JSONObject obj) throws JSONException
     {
         category = obj.getString("category");

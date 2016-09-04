@@ -14,21 +14,19 @@ import java.util.List;
 public class CategoryFragmentPagerAdapter extends FragmentPagerAdapter {
     private Context context;
 
-    private static List<Category> category = null;
-
     public static void setCategory(List<Category> arr)
     {
-        category = arr;
+        InfStorage.category = arr;
     }
-
     public CategoryFragmentPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         this.context = context;
     }
 
     @Override
-    public int getCount() {
-        return category.size();
+    public int getCount()
+    {
+        return InfStorage.category.size();
     }
 
     @Override
@@ -40,11 +38,11 @@ public class CategoryFragmentPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         // Generate title based on item position
         //return tabTitles[position];
-        return category.get(position).title;
+        return InfStorage.category.get(position).title;
     }
 
     public static int getSize()
     {
-        return category.size();
+        return InfStorage.category.size();
     }
 }

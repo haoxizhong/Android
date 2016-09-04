@@ -47,14 +47,19 @@ public class NewsGetter {
         }
         return result;
     }
+
     public static List<News> getNewsByCategory(String content)
     {
+        System.out.println("assssssssssssssssssssss");
+        System.out.println(content);
+        System.out.println("assssssssssssssssssssss");
         List<News> result = null;
         try {
             JSONArray json = new JSONObject(content).getJSONObject("data").getJSONArray("news");
             for (int a=0;a<json.length();a++)
             {
                 JSONObject obj = json.getJSONObject(a);
+                if (result == null) result = new ArrayList<News>();
                 result.add(new News(obj));
                 System.out.println(result);
             }

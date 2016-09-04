@@ -1,6 +1,7 @@
 package com.ihandy.a2014011384;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -11,10 +12,14 @@ import android.widget.TextView;
  */
 public class ListAdapter extends BaseAdapter{
     static Context context = null;
+    public Category category = null;
+
     @Override
     public int getCount()
     {
-        return 10;
+        if (category == null) return 0;
+        if (InfStorage.news.containsKey(category)) return InfStorage.news.get(category).size();
+        else return 0;
     }
 
     @Override
@@ -30,11 +35,17 @@ public class ListAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View converView , ViewGroup parent)
-    {
-        System.out.println("WK");
-        TextView view = new TextView(context);
-        view.setText("aaa");
+    public View getView(int position, View convertView , ViewGroup parent) {
+        View view = null;
+        try
+        {
+            News news = InfStorage.news.get(category).get(position);
+            view = LayoutInflater.from(context).inflate(R.layout.list_item,null);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         return view;
     }
 }

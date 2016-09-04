@@ -1,6 +1,7 @@
 package com.ihandy.a2014011384;
 
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.Inflater;
 
 
 import okhttp3.Call;
@@ -28,6 +30,10 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity
 {
     static String res = "";
+
+    String lock = "";
+
+    private int now = 0, need = 0;
 
     void setupTab()
     {
@@ -40,9 +46,69 @@ public class MainActivity extends AppCompatActivity
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    protected void createNewsByCategory(final Category category)
+    {
+        Map<String,String> map = new HashMap<>();
+        map.put("locale","en");
+        map.put("category",category.name);
+        OkHttpUtil.newCall("http://assignment.crazz.cn/news/query", map, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                synchronized (lock)
+                {
+                    System.out.println("No Network");
+
+                    InfStorage.news.put(category,SQLHelper.readNews(category));
+
+                    now = now + 1;
+                    if (now == need)
+                    {
+                        MainRunner.run(getMainLooper(), new Runnable() {
+                            @Override
+                            public void run() {
+                                setupTab();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("sssssssssssssssssssssss");
+                System.out.println(response.body().string());
+                System.out.println("sssssssssssssssssssssss");
+                synchronized (lock)
+                {
+
+                    SQLHelper.saveNews(NewsGetter.getNewsByCategory(response.body().string()));
+
+                    InfStorage.news.put(category,SQLHelper.readNews(category));
+
+                    now = now +1;
+                    if (now == need)
+                    {
+                    }
+                }
+            }
+        });
+    }
+
+    protected void createNews(List<Category> arr)
+    {
+        need = arr.size();
+        now = 0;
+        for (int a=0;a<arr.size();a++)
+        {
+            System.out.println(a);
+            createNewsByCategory(arr.get(a));
+        }
+    }
+
     protected void createCategory() {
         Map<String, String> map = new HashMap();
         map.put("timestamp", System.currentTimeMillis() + "");
+
         OkHttpUtil.newCall("http://assignment.crazz.cn/news/en/category", map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -50,21 +116,26 @@ public class MainActivity extends AppCompatActivity
                 List<Category> res = SQLHelper.readPreferCategory();
                 CategoryFragmentPagerAdapter.setCategory(res);
 
-                setupTab();
+                MainRunner.run(getMainLooper(), new Runnable() {
+                    @Override
+                    public void run() {
+                        setupTab();
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 final String str = response.body().string();
+                List<Category> res  = NewsGetter.getCategory(str);
+
+                SQLHelper.saveCategory(res);
+                res = SQLHelper.readPreferCategory();
+                CategoryFragmentPagerAdapter.setCategory(res);
+
                 MainRunner.run(getMainLooper(), new Runnable() {
                     @Override
                     public void run() {
-                        List<Category> res  = NewsGetter.getCategory(str);
-
-                        SQLHelper.saveCategory(res);
-                        res = SQLHelper.readPreferCategory();
-                        CategoryFragmentPagerAdapter.setCategory(res);
-
                         setupTab();
                     }
                 });

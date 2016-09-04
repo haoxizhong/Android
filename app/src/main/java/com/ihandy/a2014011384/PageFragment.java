@@ -13,6 +13,9 @@ import android.widget.TextView;
  */
 public class PageFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
+    public Category category;
+
+    public int myid;
 
     private int mPage;
 
@@ -21,6 +24,7 @@ public class PageFragment extends Fragment {
         args.putInt(ARG_PAGE, page);
         PageFragment fragment = new PageFragment();
         fragment.setArguments(args);
+        fragment.myid = page - 1;
         return fragment;
     }
 
@@ -36,7 +40,9 @@ public class PageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
 
         ListView listview = (ListView) view.findViewById(R.id.listView);
-        listview.setAdapter(new ListAdapter());
+        ListAdapter adapter = new ListAdapter();
+        adapter.category = InfStorage.category.get(myid);
+        listview.setAdapter(adapter);
         return view;
     }
 }
