@@ -1,5 +1,7 @@
 package com.ihandy.a2014011384;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -27,6 +29,7 @@ public class NewsGetter {
     {
         List<Category> result = null;
         try {
+
             JSONObject json = new JSONObject(content).getJSONObject("data").getJSONObject("categories");
             ObjectMapper mapper = new ObjectMapper();
             Map<String, Object> map = new HashMap<String, Object>();
@@ -50,9 +53,6 @@ public class NewsGetter {
 
     public static List<News> getNewsByCategory(String content)
     {
-        System.out.println("assssssssssssssssssssss");
-        System.out.println(content);
-        System.out.println("assssssssssssssssssssss");
         List<News> result = null;
         try {
             JSONArray json = new JSONObject(content).getJSONObject("data").getJSONArray("news");
@@ -68,6 +68,7 @@ public class NewsGetter {
         {
             e.printStackTrace();
         }
+        Log.d("Log",result+"");
         return result;
     }
 }

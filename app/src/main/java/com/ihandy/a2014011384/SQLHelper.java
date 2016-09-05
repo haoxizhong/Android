@@ -11,6 +11,10 @@ import android.database.sqlite.SQLiteQuery;
 import java.util.ArrayList;
 import java.util.List;
 import android.app.Activity;
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * Created by lenovo on 2016/9/1.
@@ -51,7 +55,15 @@ public class SQLHelper {
             News news = arr.get(a);
             Cursor cur = newsDB.rawQuery("Select * from News where NewsId = " + news.news_id ,null);
             cur.moveToFirst();
-            if (cur.getCount() == 0) newsDB.execSQL("INSERT INTO Category VALUES('" + news.category + "','" + news.images + "'," + news.news_id + ",'" + news.origin + "','" + news.source + "','" + news.title +"')");
+            if (cur.getCount() == 0)
+            {
+                String[] str =news.title.split("'");
+                String res =  str[0];
+                for (int b=1;b<str.length;b++)
+                    res = res + "''" + str[b];
+                JSONArray list = new JSONArray(news.images);
+                newsDB.execSQL("INSERT INTO News VALUES('" + news.category + "','" + list.toString() + "'," + news.news_id + ",'" + news.origin + "','" + news.source + "','" + res +"')");
+            }
         }
     }
 
@@ -78,14 +90,26 @@ public class SQLHelper {
 
         for (int a=0;a<size;a++)
         {
-            News news = new News();
-            news.category = cur.getString(0);
-            news.images = cur.getString(1);
-            news.news_id = cur.getLong(2);
-            news.origin = cur.getString(3);
-            news.source = cur.getString(4);
-            news.title = cur.getString(5);
-            arr.add(news);
+            try {
+                News news = new News();
+                news.category = cur.getString(0);
+                Log.d("LOG",cur.getString(1));
+                String str = cur.getString(2);
+                String []res = str.substring(1,str.length()-1).split(",");
+                news.images = new ArrayList<String>();
+                for (int b=0;b<res.length;b++)
+                    news.images.add(res[b]);
+                news.news_id = cur.getLong(2);
+                news.origin = cur.getString(3);
+                news.source = cur.getString(4);
+                news.title = cur.getString(5);
+                arr.add(news);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            cur.moveToNext();
         }
 
         return arr;

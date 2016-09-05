@@ -7,6 +7,7 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -46,50 +47,52 @@ public class MainActivity extends AppCompatActivity
         tabLayout.setupWithViewPager(viewPager);
     }
 
-    protected void createNewsByCategory(final Category category)
+    protected void createNewsByCategory(final List<Category> arr)
     {
         Map<String,String> map = new HashMap<>();
+        final Category category = arr.get(now);
         map.put("locale","en");
         map.put("category",category.name);
         OkHttpUtil.newCall("http://assignment.crazz.cn/news/query", map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                synchronized (lock)
-                {
-                    System.out.println("No Network");
+                System.out.println("No Network");
 
-                    InfStorage.news.put(category,SQLHelper.readNews(category));
+                InfStorage.news.put(category, SQLHelper.readNews(category));
 
-                    now = now + 1;
-                    if (now == need)
-                    {
-                        MainRunner.run(getMainLooper(), new Runnable() {
-                            @Override
-                            public void run() {
-                                setupTab();
-                            }
-                        });
-                    }
+                now = now + 1;
+                if (now == need) {
+                    MainRunner.run(getMainLooper(), new Runnable() {
+                        @Override
+                        public void run() {
+                            setupTab();
+                        }
+                    });
                 }
+                else createNewsByCategory(arr);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("sssssssssssssssssssssss");
-                System.out.println(response.body().string());
-                System.out.println("sssssssssssssssssssssss");
-                synchronized (lock)
+                String str = response.body().string();
+                int code = response.code();
+
+                if (code == 200) SQLHelper.saveNews(NewsGetter.getNewsByCategory(str));
+                else Log.d("Log",response.code()+"");
+
+                InfStorage.news.put(category,SQLHelper.readNews(category));
+
+                now = now +1;
+                if (now == need)
                 {
-
-                    SQLHelper.saveNews(NewsGetter.getNewsByCategory(response.body().string()));
-
-                    InfStorage.news.put(category,SQLHelper.readNews(category));
-
-                    now = now +1;
-                    if (now == need)
-                    {
-                    }
+                    MainRunner.run(getMainLooper(), new Runnable() {
+                        @Override
+                        public void run() {
+                            setupTab();
+                        }
+                    });
                 }
+                else createNewsByCategory(arr);
             }
         });
     }
@@ -98,11 +101,7 @@ public class MainActivity extends AppCompatActivity
     {
         need = arr.size();
         now = 0;
-        for (int a=0;a<arr.size();a++)
-        {
-            System.out.println(a);
-            createNewsByCategory(arr.get(a));
-        }
+        createNewsByCategory(arr);
     }
 
     protected void createCategory() {
@@ -116,12 +115,7 @@ public class MainActivity extends AppCompatActivity
                 List<Category> res = SQLHelper.readPreferCategory();
                 CategoryFragmentPagerAdapter.setCategory(res);
 
-                MainRunner.run(getMainLooper(), new Runnable() {
-                    @Override
-                    public void run() {
-                        setupTab();
-                    }
-                });
+                createNews(res);
             }
 
             @Override
@@ -133,12 +127,7 @@ public class MainActivity extends AppCompatActivity
                 res = SQLHelper.readPreferCategory();
                 CategoryFragmentPagerAdapter.setCategory(res);
 
-                MainRunner.run(getMainLooper(), new Runnable() {
-                    @Override
-                    public void run() {
-                        setupTab();
-                    }
-                });
+                createNews(res);
             }
         });
     }
@@ -163,7 +152,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onTouchEvent(MotionEvent event){
 
         int action = MotionEventCompat.getActionMasked(event);
-        //System.out.println(event);
         switch (action)
         {
             case (MotionEvent.ACTION_DOWN) :

@@ -40,7 +40,9 @@ public class ListAdapter extends BaseAdapter{
         try
         {
             News news = InfStorage.news.get(category).get(position);
-            view = LayoutInflater.from(context).inflate(R.layout.list_item,null);
+            view = LayoutInflater.from(context).inflate(R.layout.list_item,parent,false);
+            TextView textView = (TextView) view.findViewById(R.id.title);
+            textView.setText(news.title);
         }
         catch (Exception e)
         {
