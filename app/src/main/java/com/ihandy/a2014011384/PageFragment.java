@@ -48,7 +48,6 @@ public class PageFragment extends Fragment {
         Map<String,String> map = new HashMap<>();
         map.put("locale","en");
         map.put("category",category.name);
-        Log.d("GWG",category.toString());
         OkHttpUtil.newCall("http://assignment.crazz.cn/news/query", map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpCookie;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -103,6 +105,54 @@ public class ListAdapter extends BaseAdapter{
         {
             e.printStackTrace();
         }
+        if (position == getCount()-1) {
+            createNewsByCategory(category,InfStorage.news.get(category).get(position).news_id);
+        }
         return view;
+    }
+
+
+    protected void createNewsByCategory(final Category category,final long id) {
+        Map<String, String> map = new HashMap<>();
+        map.put("locale", "en");
+        map.put("category", category.name);
+        map.put("max_news_id", id + "");
+        OkHttpUtil.newCall("http://assignment.crazz.cn/news/query", map, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.out.println("No Network");
+
+                List<News> arr = SQLHelper.readNews(category);
+
+                InfStorage.news.put(category, SQLHelper.readNews(category));
+
+                MainRunner.run(context.getMainLooper(), new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String str = response.body().string();
+                int code = response.code();
+
+                if (code == 200) SQLHelper.saveNews(NewsGetter.getNewsByCategory(str));
+                else Log.d("Error Code", response.code() + "");
+
+                List<News> arr = SQLHelper.readNews(category);
+
+                InfStorage.news.put(category, SQLHelper.readNews(category));
+
+                MainRunner.run(context.getMainLooper(), new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        });
     }
 }

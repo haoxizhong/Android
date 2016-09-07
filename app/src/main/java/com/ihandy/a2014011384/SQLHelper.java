@@ -215,7 +215,7 @@ public class SQLHelper
         //Log.d("test",category.toString());
         try
         {
-            return newsDB.queryBuilder().orderBy("news_id",false).where().eq("category",category.name).or().eq("category",category.title).query();
+            return newsDB.queryBuilder().orderBy("news_id",false).where().eq("category",category.name.toLowerCase()).or().eq("category",category.title.toLowerCase()).query();
         }
         catch (Exception e)
         {
