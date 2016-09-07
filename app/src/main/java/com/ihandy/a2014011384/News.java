@@ -45,15 +45,15 @@ public class News {
         {
             images = "http://static.hdslb.com/error/404.png";
         }
-        try{category = obj.getString("category");}catch (Exception e){category = null;}
+        try{category = obj.getString("category").toLowerCase();}catch (Exception e){category = null;}
         try{origin = obj.getString("origin");}catch (Exception e){origin = null;}
-        try{source = obj.getJSONObject("source").getString("url");}catch (Exception e){source = null;}
+        try{source = obj.getJSONObject("source").getString("url"); if (source == null) source = "http://static.hdslb.com/error/404.png";}catch (Exception e){source ="http://static.hdslb.com/error/404.png";}
         try{title = obj.getString("title");}catch (Exception e){title = null;}
         news_id = obj.getLong("news_id");
     }
     @Override
     public String toString()
     {
-        return "{Category:"+category+",Images:"+images.toString()+",News_id:"+news_id+",Origin:"+origin+",Source:"+source+",Title:"+title+"}";
+        return "{Category:"+category+",Images:"+images+",News_id:"+news_id+",Origin:"+origin+",Source:"+source+",Title:"+title+"}";
     }
 }

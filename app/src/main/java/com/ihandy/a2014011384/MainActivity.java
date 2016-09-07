@@ -2,6 +2,8 @@ package com.ihandy.a2014011384;
 
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
@@ -13,8 +15,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -69,7 +74,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 final String str = response.body().string();
-                Log.d("Log",str);
+                //Log.d("Log",str);
                 List<Category> res  = NewsGetter.getCategory(str);
 
                 SQLHelper.saveCategory(res);
@@ -82,6 +87,23 @@ public class MainActivity extends AppCompatActivity
                         setupTab();
                     }
                 });
+            }
+        });
+    }
+
+    private void bilibili()
+    {
+        final ImageView view = new ImageView(this.getBaseContext());
+
+        Picasso.with(this.getBaseContext()).load("http://static.hdslb.com/error/404.png").into(view,new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+                Bitmap map = ((BitmapDrawable) view.getDrawable()).getBitmap();
+                SQLHelper.saveImage(new ImgHelper("http://static.hdslb.com/error/404.png" , map));
+            }
+
+            @Override
+            public void onError() {
             }
         });
     }

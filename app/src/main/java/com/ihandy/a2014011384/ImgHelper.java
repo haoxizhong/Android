@@ -26,4 +26,9 @@ public class ImgHelper {
         str2.compress(Bitmap.CompressFormat.PNG, 100, stream);
         image = Base64.encodeToString(stream.toByteArray(),0);
     }
+    ImgHelper(String str1,String str2)
+    {
+        url = str1;
+        image = str2;
+    }
 }

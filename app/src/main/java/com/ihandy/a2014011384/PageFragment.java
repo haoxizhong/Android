@@ -1,11 +1,13 @@
 package com.ihandy.a2014011384;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -46,6 +48,7 @@ public class PageFragment extends Fragment {
         Map<String,String> map = new HashMap<>();
         map.put("locale","en");
         map.put("category",category.name);
+        Log.d("GWG",category.toString());
         OkHttpUtil.newCall("http://assignment.crazz.cn/news/query", map, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -69,7 +72,7 @@ public class PageFragment extends Fragment {
                 int code = response.code();
 
                 if (code == 200) SQLHelper.saveNews(NewsGetter.getNewsByCategory(str));
-                else Log.d("Log",response.code()+"");
+                else Log.d("Error Code",response.code()+"");
 
                 List<News> arr = SQLHelper.readNews(category);
 
@@ -101,6 +104,15 @@ public class PageFragment extends Fragment {
         adapter.category = InfStorage.category.get(myid);
         adapter.context = getContext();
         listview.setAdapter(adapter);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("Click Item",position+"");
+                Main2Activity.url = InfStorage.news.get(category).get(position).source;
+                Intent intent = new Intent(getContext(),Main2Activity.class);
+                startActivity(intent);
+            }
+        });
         createNewsByCategory(category);
         return view;
     }

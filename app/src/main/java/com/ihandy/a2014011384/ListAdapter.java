@@ -51,6 +51,7 @@ public class ListAdapter extends BaseAdapter{
         return position;
     }
 
+
     @Override
     public View getView(int position, View convertView , ViewGroup parent) {
         View view = null;
@@ -82,7 +83,14 @@ public class ListAdapter extends BaseAdapter{
 
                     @Override
                     public void onError() {
-                        imageView.setBackgroundResource(R.drawable.png404);
+                        final Bitmap map = SQLHelper.readImage("http://static.hdslb.com/error/404.png");
+
+                        MainRunner.run(context.getMainLooper(), new Runnable() {
+                            @Override
+                            public void run() {
+                                imageView.setImageBitmap(map);
+                            }
+                        });
                     }
                 });
             }

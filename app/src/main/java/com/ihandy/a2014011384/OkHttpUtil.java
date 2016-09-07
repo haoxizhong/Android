@@ -30,8 +30,8 @@ public class OkHttpUtil {
             first=false;
             it.remove();
         }
-        Log.d("Log",str);
-        try{Thread.sleep(1000);}catch (Exception e){e.printStackTrace();}
+        //Log.d("Log",str);
+        //try{Thread.sleep(1000);}catch (Exception e){e.printStackTrace();}
         Request.Builder builder = new Request.Builder().url(str);
         return builder.build();
     }
