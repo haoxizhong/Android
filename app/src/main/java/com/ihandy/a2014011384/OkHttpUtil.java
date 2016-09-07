@@ -1,7 +1,10 @@
 package com.ihandy.a2014011384;
 
+import android.util.Log;
+
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.Exchanger;
 
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
@@ -16,15 +19,21 @@ public class OkHttpUtil {
 
     private static Request buildRequest(String url,Map<String,String> map)
     {
-        HttpUrl.Builder builder = HttpUrl.parse(url).newBuilder();
+        String str = url;
         Iterator it = map.entrySet().iterator();
+        boolean first = true;
         while (it.hasNext())
         {
             Map.Entry pair = (Map.Entry)it.next();
-            builder.addQueryParameter(pair.getKey().toString(),pair.getValue().toString());
+            if (first) str = str + "?" + pair.getKey().toString() + "=" + pair.getValue().toString();
+            else str =  str + "&" + pair.getKey().toString() + "=" + pair.getValue().toString();
+            first=false;
             it.remove();
         }
-        return new Request.Builder().url(builder.build()).build();
+        Log.d("Log",str);
+        try{Thread.sleep(1000);}catch (Exception e){e.printStackTrace();}
+        Request.Builder builder = new Request.Builder().url(str);
+        return builder.build();
     }
 
     public static void newCall(String url, Map<String,String> map, Callback callback)

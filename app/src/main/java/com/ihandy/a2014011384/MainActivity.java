@@ -47,63 +47,6 @@ public class MainActivity extends AppCompatActivity
         tabLayout.setupWithViewPager(viewPager);
     }
 
-    protected void createNewsByCategory(final List<Category> arr)
-    {
-        Map<String,String> map = new HashMap<>();
-        final Category category = arr.get(now);
-        map.put("locale","en");
-        map.put("category",category.name);
-        OkHttpUtil.newCall("http://assignment.crazz.cn/news/query", map, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                System.out.println("No Network");
-
-                InfStorage.news.put(category, SQLHelper.readNews(category));
-
-                now = now + 1;
-                if (now == need) {
-                    MainRunner.run(getMainLooper(), new Runnable() {
-                        @Override
-                        public void run() {
-                            setupTab();
-                        }
-                    });
-                }
-                else createNewsByCategory(arr);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String str = response.body().string();
-                int code = response.code();
-
-                if (code == 200) SQLHelper.saveNews(NewsGetter.getNewsByCategory(str));
-                else Log.d("Log",response.code()+"");
-
-                InfStorage.news.put(category,SQLHelper.readNews(category));
-
-                now = now +1;
-                if (now == need)
-                {
-                    MainRunner.run(getMainLooper(), new Runnable() {
-                        @Override
-                        public void run() {
-                            setupTab();
-                        }
-                    });
-                }
-                else createNewsByCategory(arr);
-            }
-        });
-    }
-
-    protected void createNews(List<Category> arr)
-    {
-        need = arr.size();
-        now = 0;
-        createNewsByCategory(arr);
-    }
-
     protected void createCategory() {
         Map<String, String> map = new HashMap();
         map.put("timestamp", System.currentTimeMillis() + "");
@@ -115,19 +58,30 @@ public class MainActivity extends AppCompatActivity
                 List<Category> res = SQLHelper.readPreferCategory();
                 CategoryFragmentPagerAdapter.setCategory(res);
 
-                createNews(res);
+                MainRunner.run(getMainLooper(), new Runnable() {
+                    @Override
+                    public void run() {
+                        setupTab();
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 final String str = response.body().string();
+                Log.d("Log",str);
                 List<Category> res  = NewsGetter.getCategory(str);
 
                 SQLHelper.saveCategory(res);
                 res = SQLHelper.readPreferCategory();
                 CategoryFragmentPagerAdapter.setCategory(res);
 
-                createNews(res);
+                MainRunner.run(getMainLooper(), new Runnable() {
+                    @Override
+                    public void run() {
+                        setupTab();
+                    }
+                });
             }
         });
     }

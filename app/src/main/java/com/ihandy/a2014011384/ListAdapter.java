@@ -1,11 +1,28 @@
 package com.ihandy.a2014011384;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpCookie;
+import java.util.HashMap;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * Created by lenovo on 2016/9/4.
@@ -39,10 +56,40 @@ public class ListAdapter extends BaseAdapter{
         View view = null;
         try
         {
-            News news = InfStorage.news.get(category).get(position);
+            final News news = InfStorage.news.get(category).get(position);
+            final String url = news.images;
             view = LayoutInflater.from(context).inflate(R.layout.list_item,parent,false);
             TextView textView = (TextView) view.findViewById(R.id.title);
             textView.setText(news.title);
+            final ImageView imageView = (ImageView) view.findViewById(R.id.image);
+            Bitmap img = null;
+            try
+            {
+                img = SQLHelper.readImage(url);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                img = null;
+            }
+            if (img == null) {
+                Picasso.with(context).load(url).into(imageView, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Bitmap map = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                        SQLHelper.saveImage(new ImgHelper(url , map));
+                    }
+
+                    @Override
+                    public void onError() {
+                        imageView.setBackgroundResource(R.drawable.png404);
+                    }
+                });
+            }
+            else
+            {
+                imageView.setImageBitmap(img);
+            }
         }
         catch (Exception e)
         {

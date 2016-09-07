@@ -8,10 +8,21 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteQuery;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
+
+import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,11 +30,65 @@ import org.json.JSONObject;
 /**
  * Created by lenovo on 2016/9/1.
  */
-public class SQLHelper {
-    public static SQLiteDatabase categoryDB = null;
-    public static SQLiteDatabase newsDB = null;
-    public static SQLiteDatabase imageDB = null;
-    public static void onCreate(Activity app)
+class OrmHelper extends OrmLiteSqliteOpenHelper
+{
+    public OrmHelper(Context context, String databaseName, CursorFactory factory, int databaseVersion) {
+        super(context, databaseName, factory, databaseVersion);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
+        try
+        {
+            TableUtils.createTable(connectionSource,Category.class);
+            TableUtils.createTable(connectionSource,News.class);
+            TableUtils.createTable(connectionSource,ImgHelper.class);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int i, int i1) {
+        try
+        {
+            TableUtils.dropTable(connectionSource,Category.class,true);
+            TableUtils.dropTable(connectionSource,News.class,true);
+            TableUtils.dropTable(connectionSource,ImgHelper.class,true);
+            onCreate(sqLiteDatabase,connectionSource);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+}
+
+public class SQLHelper
+{
+    public static Dao<Category,String> categoryDB = null;
+    public static Dao<News,String> newsDB = null;
+    public static Dao<ImgHelper,String> imageDB = null;
+    public static OrmLiteSqliteOpenHelper helper = null;
+    public static void onCreate(Context context)
+    {
+        helper = new OrmHelper(context, "database.db", null , 4);
+        try
+        {
+            categoryDB = helper.getDao(Category.class);
+            newsDB = helper.getDao(News.class);
+            imageDB = helper.getDao(ImgHelper.class);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            System.exit(0);
+        }
+    }
+
+    /*public static void onCreate()
     {
         categoryDB = app.openOrCreateDatabase("category",android.content.Context.MODE_PRIVATE ,null);
         newsDB = app.openOrCreateDatabase("news.db",android.content.Context.MODE_PRIVATE ,null);
@@ -35,16 +100,20 @@ public class SQLHelper {
 
     public static void dropAll()
     {
-    }
+    }*/
 
     public static void saveCategory(List<Category> arr)
     {
         for (int a=0;a<arr.size();a++)
         {
             Category cat = arr.get(a);
-            Cursor cur = categoryDB.rawQuery("Select * from Category where Name = '" + cat.name+ "'",null);
-            cur.moveToFirst();
-            if (cur.getCount() == 0) categoryDB.execSQL("INSERT INTO Category VALUES('" + cat.name + "','" + cat.title + "','1')");
+            try {
+                categoryDB.createOrUpdate(cat);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -53,65 +122,67 @@ public class SQLHelper {
         for (int a=0;a<arr.size();a++)
         {
             News news = arr.get(a);
-            Cursor cur = newsDB.rawQuery("Select * from News where NewsId = " + news.news_id ,null);
-            cur.moveToFirst();
-            if (cur.getCount() == 0)
-            {
-                String[] str =news.title.split("'");
-                String res =  str[0];
-                for (int b=1;b<str.length;b++)
-                    res = res + "''" + str[b];
-                JSONArray list = new JSONArray(news.images);
-                newsDB.execSQL("INSERT INTO News VALUES('" + news.category + "','" + list.toString() + "'," + news.news_id + ",'" + news.origin + "','" + news.source + "','" + res +"')");
-            }
-        }
-    }
-
-    public static List<Category> readPreferCategory()
-    {
-        Cursor cur = categoryDB.rawQuery("Select * from Category where Prefer='1'",null);
-        cur.moveToFirst();
-        int size = cur.getCount();
-        List<Category> arr = new ArrayList<Category>();
-        for (int a=0;a<size;a++)
-        {
-            arr.add(new Category(cur.getString(0),cur.getString(1)));
-            cur.moveToNext();
-        }
-        return arr;
-    }
-
-    public static List<News> readNews(Category category)
-    {
-        Cursor cur = newsDB.rawQuery("Select * from News WHERE category='" + category.name +"'ORDER by NewsId",null);
-        cur.moveToFirst();
-        int size = cur.getCount();
-        List<News> arr = new ArrayList<News>();
-
-        for (int a=0;a<size;a++)
-        {
             try {
-                News news = new News();
-                news.category = cur.getString(0);
-                Log.d("LOG",cur.getString(1));
-                String str = cur.getString(2);
-                String []res = str.substring(1,str.length()-1).split(",");
-                news.images = new ArrayList<String>();
-                for (int b=0;b<res.length;b++)
-                    news.images.add(res[b]);
-                news.news_id = cur.getLong(2);
-                news.origin = cur.getString(3);
-                news.source = cur.getString(4);
-                news.title = cur.getString(5);
-                arr.add(news);
+                newsDB.createOrUpdate(news);
             }
             catch (Exception e)
             {
                 e.printStackTrace();
             }
-            cur.moveToNext();
         }
-
-        return arr;
     }
+
+    public static void saveImage(ImgHelper img)
+    {
+        try {
+            imageDB.createOrUpdate(img);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static List<Category> readPreferCategory()
+    {
+        try {
+            return categoryDB.queryBuilder().where().eq("prefer",1).query();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<News> readNews(Category category) {
+        Log.d("test",category.toString());
+        try
+        {
+            return newsDB.queryBuilder().orderBy("news_id",false).where().eq("category",category.name).or().eq("category",category.title).query();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Bitmap readImage(String url)
+    {
+        Log.d("Image",url);
+        try
+        {
+            //Log.d("ZZ",imageDB.queryBuilder().where().eq("url",url).query().toString());
+            byte[] arr = Base64.decode(imageDB.queryBuilder().where().eq("url",url).query().get(0).image,0);
+            return BitmapFactory.decodeByteArray(arr,0,arr.length);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
+

@@ -61,7 +61,7 @@ public class NewsGetter {
                 JSONObject obj = json.getJSONObject(a);
                 if (result == null) result = new ArrayList<News>();
                 result.add(new News(obj));
-                System.out.println(result);
+               // System.out.println(result);
             }
         }
         catch (Exception e)
