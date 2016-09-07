@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.tencent.mm.sdk.openapi.IWXAPI;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -23,6 +23,7 @@ import okhttp3.Response;
 /**
  * Created by lenovo on 2016/9/1.
  */
+
 public class PageFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
     public Category category;
@@ -96,6 +97,7 @@ public class PageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        try{
         View view = inflater.inflate(R.layout.fragment_page, container, false);
 
         ListView listview = (ListView) view.findViewById(R.id.listView);
@@ -107,12 +109,17 @@ public class PageFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("Click Item",position+"");
-                Main2Activity.url = InfStorage.news.get(category).get(position).source;
+                Main2Activity.news = InfStorage.news.get(category).get(position);
                 Intent intent = new Intent(getContext(),Main2Activity.class);
                 startActivity(intent);
             }
         });
         createNewsByCategory(category);
-        return view;
+        return view;}
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return new View(getContext());
+        }
     }
 }
