@@ -1,6 +1,7 @@
 package com.ihandy.a2014011384;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -113,6 +114,18 @@ public class Main2Activity extends AppCompatActivity{
         news.prefer = 1 - news.prefer;
         updateStatus(news.prefer);
         SQLHelper.saveNews(news);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (Main3Activity.on3)
+        {
+            Intent intent = new Intent(getBaseContext(),Main3Activity.class);
+            startActivity(intent);
+            finish();
+        }
+        else super.onBackPressed();
     }
 
     @Override

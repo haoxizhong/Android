@@ -2,6 +2,7 @@ package com.ihandy.a2014011384;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,16 +13,21 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
+import java.util.List;
+
 /**
  * Created by lenovo on 2016/9/8.
  */
 public class OtherListAdapter extends BaseAdapter {
     static Context context = null;
+    static List<Category> category = null;
 
     @Override
     public int getCount()
     {
-        return SQLHelper.readPreferNews().size();
+        return category.size();
     }
 
     @Override
@@ -40,9 +46,11 @@ public class OtherListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView , ViewGroup parent) {
         View view = null;
-        final News news = SQLHelper.readPreferNews().get(position);
-        final String url = news.images;
-        view = LayoutInflater.from(context).inflate(R.layout.list_item,parent,false);
-        return view;
+        view = LayoutInflater.from(context).inflate(R.layout.drawer_layout,parent,false);
+        TextView text = (TextView) view.findViewById(R.id.ttii);
+        text.setText(category.get(position).title);
+        if (category.get(position).prefer == 1) text.setBackgroundColor(Color.GREEN);
+        else text.setBackgroundColor(Color.RED);
+        return text;
     }
 }

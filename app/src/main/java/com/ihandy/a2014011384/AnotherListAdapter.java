@@ -29,11 +29,12 @@ import okhttp3.Response;
  */
 public class AnotherListAdapter extends BaseAdapter{
     static Context context = null;
+    static List<News> prefer =null;
 
     @Override
     public int getCount()
     {
-        return SQLHelper.readPreferNews().size();
+        return prefer.size();
     }
 
     @Override
@@ -52,7 +53,7 @@ public class AnotherListAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView , ViewGroup parent) {
         View view = null;
-        final News news = SQLHelper.readPreferNews().get(position);
+        final News news = prefer.get(position);
         final String url = news.images;
         view = LayoutInflater.from(context).inflate(R.layout.list_item,parent,false);
         TextView textView = (TextView) view.findViewById(R.id.title);

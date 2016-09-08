@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ public class CategoryFragmentPagerAdapter extends FragmentPagerAdapter {
 
     public static void setCategory(List<Category> arr)
     {
-        InfStorage.category = arr;
+        InfStorage.category = SQLHelper.readPreferCategory();
     }
     public CategoryFragmentPagerAdapter(FragmentManager fm, Context context) {
         super(fm);

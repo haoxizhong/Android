@@ -119,6 +119,17 @@ public class SQLHelper
         }
     }
 
+    public static void saveCategory(Category category)
+    {
+        try {
+            categoryDB.createOrUpdate(category);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public static void saveNews(List<News> arr)
     {
         for (int a=0;a<arr.size();a++)
@@ -161,7 +172,20 @@ public class SQLHelper
     public static List<Category> readPreferCategory()
     {
         try {
+            Log.d("QQQQ",categoryDB.queryBuilder().where().eq("prefer",1).query().size()+"");
             return categoryDB.queryBuilder().where().eq("prefer",1).query();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<Category> readCategory()
+    {
+        try {
+            return categoryDB.queryBuilder().query();
         }
         catch (Exception e)
         {

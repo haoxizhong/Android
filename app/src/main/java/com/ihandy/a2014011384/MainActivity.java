@@ -16,6 +16,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +52,8 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
     static String res = "";
 
+    static CategoryFragmentPagerAdapter catadapter;
+
     String lock = "";
 
     private int now = 0, need = 0;
@@ -61,10 +66,18 @@ public class MainActivity extends AppCompatActivity {
      */
     private GoogleApiClient client;
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.bar_action, menu);
+        return true;
+    }
+
     void setupTab() {
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new CategoryFragmentPagerAdapter(getSupportFragmentManager(), MainActivity.this));
+        catadapter = new CategoryFragmentPagerAdapter(getSupportFragmentManager(), MainActivity.this);
+        viewPager.setAdapter(catadapter);
 
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
@@ -132,8 +145,6 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        getSupportActionBar().hide();
-
         ListAdapter.context = this;
         SQLHelper.onCreate(this);
 
@@ -141,11 +152,10 @@ public class MainActivity extends AppCompatActivity {
         drawer.setBackgroundColor(Color.WHITE);
         drawerlist = (ListView) findViewById(R.id.left_drawer);
         drawerlist.setBackgroundColor(Color.WHITE);
-        final String[] arr = {"Favorites", "Category Setting", "About me"};
         drawerlist.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                return arr.length+1;
+                return 2;
             }
 
             @Override
@@ -162,37 +172,17 @@ public class MainActivity extends AppCompatActivity {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = null;
                 if (position!=0) {
-                    view = LayoutInflater.from(getBaseContext()).inflate(R.layout.drawer_layout, parent, false);
+
+                    view= LayoutInflater.from(getBaseContext()).inflate(R.layout.drawer_layout, parent, false);
                     TextView textView = (TextView) view.findViewById(R.id.ttii);
-                    textView.setText(arr[position-1]);
+                    textView.setText("Zhong Haoxi\n2014011384\nzhonghaoxi@yeah.net\n18813119711");
+                    return textView;
                 }
                 else
                 {
                     view = LayoutInflater.from(getBaseContext()).inflate(R.layout.img_layout, parent, false);
                 }
                 return view;
-            }
-        });
-        drawerlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 1)
-                {
-                    Intent intent = new Intent(getBaseContext(),Main3Activity.class);
-                    startActivity(intent);
-                }
-                if (position == 2)
-                {
-                    Intent intent = new Intent(getBaseContext(),Main4Activity.class);
-                    startActivity(intent);
-
-                }
-                if (position == 3)
-                {
-                    Intent intent = new Intent(getBaseContext(),Main5Activity.class);
-                    startActivity(intent);
-
-                }
             }
         });
 
@@ -206,7 +196,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
         int action = MotionEventCompat.getActionMasked(event);
         switch (action) {
             case (MotionEvent.ACTION_DOWN): {
@@ -302,5 +291,33 @@ public class MainActivity extends AppCompatActivity {
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.action_fav:
+                intent = new Intent(getBaseContext(),Main3Activity.class);
+                startActivity(intent);
+                return true;
+            case R.id.action_cat:
+                intent = new Intent(getBaseContext(),Main4Activity.class);
+                startActivity(intent);
+                this.finish();
+                return true;
+
+            //case R.id.action_pengyouquan:
+            // User chose the "Favorite" action, mark the current item
+            // as a favorite...
+            //    Share(1);
+            //    return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 }
