@@ -33,11 +33,20 @@ public class Main2Activity extends AppCompatActivity{
     static News news = null;
     private static final String appid = "wx01cee72f6183d77d";
     private static IWXAPI api = null;
+    MenuItem love;
+
+    void updateStatus(int prefer)
+    {
+        if (prefer == 0) love.setIcon(R.drawable.love_false);
+        else love.setIcon(R.drawable.love_true);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_bar, menu);
+        love = menu.findItem(R.id.action_love);
+        updateStatus(news.prefer);
         return true;
     }
 
@@ -54,7 +63,7 @@ public class Main2Activity extends AppCompatActivity{
         Log.d("URL",news.source);
         WebView web = (WebView) findViewById(R.id.webpage);
         WebSettings settings = web.getSettings();
-        settings.setJavaScriptEnabled(true);
+        //settings.setJavaScriptEnabled(true);
         settings.setRenderPriority(WebSettings.RenderPriority.HIGH);
         if (Build.VERSION.SDK_INT >= 19) {
             // chromium, enable hardware acceleration
@@ -99,20 +108,28 @@ public class Main2Activity extends AppCompatActivity{
         api.sendReq(req);
     }
 
+    void change_love()
+    {
+        news.prefer = 1 - news.prefer;
+        updateStatus(news.prefer);
+        SQLHelper.saveNews(news);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_love:
+                change_love();
                 return true;
             case R.id.action_haoyou:
                 Share(0);
                 return true;
 
-            case R.id.action_pengyouquan:
+            //case R.id.action_pengyouquan:
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
-                Share(1);
-                return true;
+            //    Share(1);
+            //    return true;
 
             default:
                 // If we got here, the user's action was not recognized.

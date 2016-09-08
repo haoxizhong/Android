@@ -4,7 +4,7 @@
     <!-- "Mark Favorite", should appear as action button if possible -->
     <item
         android:id="@+id/action_love"
-        android:icon="@drawable/haoyou"
+        android:icon="@drawable/love_false"
         app:showAsAction="ifRoom"/>
 
     <item
@@ -13,8 +13,8 @@
         app:showAsAction="ifRoom"/>
 
     <!-- Settings, should always be in the overflow -->
-    <item android:id="@+id/action_pengyouquan"
+    <!-- <item android:id="@+id/action_pengyouquan"
         android:icon="@drawable/jiaoya"
         app:showAsAction="never"/>
-
+        -->
 </menu>

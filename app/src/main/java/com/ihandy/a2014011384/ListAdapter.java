@@ -20,8 +20,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpCookie;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -33,6 +35,7 @@ import okhttp3.Response;
 public class ListAdapter extends BaseAdapter{
     static Context context = null;
     public Category category = null;
+    Set<String> se = new HashSet<String>();
 
     @Override
     public int getCount()
@@ -106,7 +109,8 @@ public class ListAdapter extends BaseAdapter{
         {
             e.printStackTrace();
         }
-        if (position == getCount()-1) {
+        if (position+1 >= getCount() && category != null && se.contains(position+"") == false) {
+            se.add(position+"");
             createNewsByCategory(category,InfStorage.news.get(category).get(position).news_id);
         }
         return view;

@@ -8,7 +8,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/image"
         android:adjustViewBounds="true"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY"
+        android:background="@drawable/bi404" />
 
     <TextView
         android:layout_width="match_parent"

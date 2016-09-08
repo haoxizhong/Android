@@ -119,6 +119,7 @@ public class PageFragment extends Fragment {
         catch (Exception e)
         {
             e.printStackTrace();
+            System.exit(0);
             return new View(getContext());
         }
     }

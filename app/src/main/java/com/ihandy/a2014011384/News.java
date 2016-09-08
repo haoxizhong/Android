@@ -30,6 +30,8 @@ public class News {
     String source;
     @DatabaseField
     String title;
+    @DatabaseField
+    int prefer = 0;
     News()
     {
     }
@@ -54,6 +56,6 @@ public class News {
     @Override
     public String toString()
     {
-        return "{Category:"+category+",Images:"+images+",News_id:"+news_id+",Origin:"+origin+",Source:"+source+",Title:"+title+"}";
+        return "{Category:"+category+",Images:"+images+",News_id:"+news_id+",Origin:"+origin+",Source:"+source+",Title:"+title+" , Prefer : " + prefer + "}";
     }
 }
