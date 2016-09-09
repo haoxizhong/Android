@@ -92,21 +92,25 @@ public class Main2Activity extends AppCompatActivity{
         {
             Toast.makeText(this, "您还未安装微信客户端",Toast.LENGTH_SHORT).show();
             return;
+
         }
         WXWebpageObject webpage = new WXWebpageObject();
         webpage.webpageUrl = news.source;
 
-        WXMediaMessage msg = new WXMediaMessage();
+        WXMediaMessage msg = new WXMediaMessage(webpage);
         msg.title = news.title;
         msg.description = news.title;
-        Bitmap thumb = BitmapFactory.decodeResource(getResources(),R.drawable.png404);
+        Bitmap thumb = BitmapFactory.decodeResource(getResources(),R.drawable.zhinai);
         msg.setThumbImage(thumb);
         SendMessageToWX.Req req = new SendMessageToWX.Req();
         req.transaction = String.valueOf(System.currentTimeMillis());
         req.message = msg;
         if (flag == 0) req.scene = SendMessageToWX.Req.WXSceneSession;
         else req.scene = SendMessageToWX.Req.WXSceneTimeline;
-        api.sendReq(req);
+        System.out.println(req);
+        System.out.println(api);
+        if (api.sendReq(req)) Toast.makeText(this, "分享成功",Toast.LENGTH_SHORT).show();
+        else Toast.makeText(this, "分享失败",Toast.LENGTH_SHORT).show();
     }
 
     void change_love()

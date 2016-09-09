@@ -11,6 +11,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -94,17 +97,22 @@ public class PageFragment extends Fragment {
         mPage = getArguments().getInt(ARG_PAGE);
     }
 
+    //PullToRefreshListView listview;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("MJY","error");
         try{
         View view = inflater.inflate(R.layout.fragment_page, container, false);
 
+       // listview = (PullToRefreshListView) view.findViewById(R.id.listView);
         ListView listview = (ListView) view.findViewById(R.id.listView);
         adapter = new ListAdapter();
         adapter.category = InfStorage.category.get(myid);
         adapter.context = getContext();
         listview.setAdapter(adapter);
+        //    listview.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -114,6 +122,21 @@ public class PageFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        /*listview.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                refreshView.onRefreshComplete();
+                listview.onRefreshComplete();
+                listview.onRefreshComplete();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+            }
+//                createNewsByCategory(category);
+//                adapter.notifyDataSetChanged();
+        });*/
         createNewsByCategory(category);
         return view;}
         catch (Exception e)

@@ -187,6 +187,49 @@ public class MainActivity extends AppCompatActivity {
         });
 
         createCategory();
+
+        /*ListAdapter.context = this;
+        SQLHelper.onCreate(this);
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.setBackgroundColor(Color.WHITE);
+        drawerlist = (ListView) findViewById(R.id.left_drawer);
+        drawerlist.setBackgroundColor(Color.WHITE);
+        drawerlist.setAdapter(new BaseAdapter() {
+            @Override
+            public int getCount() {
+                return 2;
+            }
+
+            @Override
+            public Object getItem(int position) {
+                return null;
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return 0;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = null;
+                if (position!=0) {
+
+                    view= LayoutInflater.from(getBaseContext()).inflate(R.layout.drawer_layout, parent, false);
+                    TextView textView = (TextView) view.findViewById(R.id.ttii);
+                    textView.setText("Zhong Haoxi\n2014011384\nzhonghaoxi@yeah.net\n18813119711");
+                    return textView;
+                }
+                else
+                {
+                    view = LayoutInflater.from(getBaseContext()).inflate(R.layout.img_layout, parent, false);
+                }
+                return view;
+            }
+        });
+
+        createCategory();*/
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
