@@ -14,9 +14,19 @@ import okhttp3.Request;
 /**
  * Created by lenovo on 2016/8/31.
  */
+
+/**
+ * Helper of okhttputil
+ */
 public class OkHttpUtil {
     private static final OkHttpClient client = new OkHttpClient();
 
+    /**
+     * build request
+     * @param url URL
+     * @param map Get parameter
+     * @return request
+     */
     private static Request buildRequest(String url,Map<String,String> map)
     {
         String str = url;
@@ -36,6 +46,12 @@ public class OkHttpUtil {
         return builder.build();
     }
 
+    /**
+     * Build a new request
+     * @param url URL
+     * @param map parameter
+     * @param callback what to do
+     */
     public static void newCall(String url, Map<String,String> map, Callback callback)
     {
         Request request = buildRequest(url,map);

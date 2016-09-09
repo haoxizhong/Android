@@ -11,6 +11,9 @@ import android.widget.ListView;
 
 import java.util.List;
 
+/**
+ * The third activity
+ */
 public class Main3Activity extends AppCompatActivity {
     List<News> prefer = SQLHelper.readPreferNews();
     public static boolean on3 = false;

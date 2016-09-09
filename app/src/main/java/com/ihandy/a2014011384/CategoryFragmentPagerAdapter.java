@@ -12,9 +12,17 @@ import java.util.List;
 /**
  * Created by lenovo on 2016/9/1.
  */
+
+/**
+ * Adapter of fragment page
+ */
 public class CategoryFragmentPagerAdapter extends FragmentPagerAdapter {
     private Context context;
 
+    /**
+     * Set category array
+     * @param arr the array
+     */
     public static void setCategory(List<Category> arr)
     {
         InfStorage.category = SQLHelper.readPreferCategory();
@@ -42,6 +50,10 @@ public class CategoryFragmentPagerAdapter extends FragmentPagerAdapter {
         return InfStorage.category.get(position).title;
     }
 
+    /**
+     * Get the size of category
+     * @return the size
+     */
     public static int getSize()
     {
         return InfStorage.category.size();

@@ -20,6 +20,10 @@ import java.util.List;
 /**
  * Created by lenovo on 2016/9/8.
  */
+
+/**
+ * Category prefer adpater
+ */
 public class OtherListAdapter extends BaseAdapter {
     static Context context = null;
     static List<Category> category = null;

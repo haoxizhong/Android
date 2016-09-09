@@ -27,6 +27,10 @@ import okhttp3.Response;
 /**
  * Created by lenovo on 2016/9/8.
  */
+
+/**
+ * Adapter of Favorite news
+ */
 public class AnotherListAdapter extends BaseAdapter{
     static Context context = null;
     static List<News> prefer =null;
@@ -43,13 +47,24 @@ public class AnotherListAdapter extends BaseAdapter{
         return  ""+position;
     }
 
+    /**
+     * get the ID
+     * @param position the postion
+     * @return the position
+     */
     @Override
     public long getItemId(int position)
     {
         return position;
     }
 
-
+    /**
+     * Get the view at postion
+     * @param position Override Value
+     * @param convertView Overrode value
+     * @param parent Override value
+     * @return the view of the item at position
+     */
     @Override
     public View getView(int position, View convertView , ViewGroup parent) {
         View view = null;

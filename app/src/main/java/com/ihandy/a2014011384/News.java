@@ -16,6 +16,9 @@ import java.util.List;
  * Created by lenovo on 2016/9/1.
  */
 
+/**
+ * News Class
+ */
 @DatabaseTable(tableName = "News")
 public class News {
     @DatabaseField
@@ -35,6 +38,12 @@ public class News {
     News()
     {
     }
+
+    /**
+     * Get news from json
+     * @param obj Json object
+     * @throws JSONException Nothing
+     */
     News(JSONObject obj) throws JSONException {
         try{category = obj.getString("category").toLowerCase();}catch (Exception e){category = null;}
         try

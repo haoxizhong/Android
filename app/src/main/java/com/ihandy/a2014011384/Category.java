@@ -7,13 +7,25 @@ import com.j256.ormlite.table.DatabaseTable;
  * Created by lenovo on 2016/8/30.
  */
 
+/**
+ * The class if Category
+ */
 @DatabaseTable(tableName = "Category")
 public class Category {
+    /**
+     * Category name
+     */
     @DatabaseField(id = true)
     public String name;
+    /**
+     * Category title
+     */
     @DatabaseField
     public String title;
     @DatabaseField
+    /**
+     * Whether to show category
+     */
     public int prefer = 1;
     Category()
     {

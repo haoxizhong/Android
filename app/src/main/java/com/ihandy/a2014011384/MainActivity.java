@@ -49,6 +49,9 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
+/**
+ * The main activity
+ */
 public class MainActivity extends AppCompatActivity {
     static String res = "";
 
@@ -73,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Setup the tab layout
+     */
     void setupTab() {
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -84,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    /**
+     * Create the Category
+     */
     protected void createCategory() {
         Map<String, String> map = new HashMap();
         map.put("timestamp", System.currentTimeMillis() + "");
@@ -123,6 +132,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Get the bilibili 404
+     */
     private void bilibili() {
         final ImageView view = new ImageView(this.getBaseContext());
 
@@ -258,6 +270,13 @@ public class MainActivity extends AppCompatActivity {
     private static final int SWIPE_THRESHOLD = 100;
     private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
+    /**
+     * Detect the swipe action
+     * @param x1 X coordinate pre
+     * @param y1 Y coordinate pre
+     * @param x2 X coordinate after
+     * @param y2 Y coordinate after
+     */
     private void onSwipe(double x1, double y1, double x2, double y2) {
         boolean result = false;
         try {
@@ -283,12 +302,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Detect swipe left action
+     */
     private void onSwipeLeft() {
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         int nowid = viewPager.getCurrentItem();
         if (nowid != 0) viewPager.setCurrentItem(nowid - 1, true);
     }
 
+    /**
+     * Detect swipe right action
+     */
     private void onSwipeRight() {
         int size = CategoryFragmentPagerAdapter.getSize();
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);

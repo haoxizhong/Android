@@ -27,6 +27,9 @@ import okhttp3.Response;
  * Created by lenovo on 2016/9/1.
  */
 
+/**
+ * PageFrament class
+ */
 public class PageFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
     public Category category;
@@ -37,6 +40,12 @@ public class PageFragment extends Fragment {
 
     ListAdapter adapter;
 
+    /**
+     * Genereate new page
+     * @param page the id
+     * @param cat the category
+     * @return New page instance
+     */
     public static PageFragment newInstance(int page ,Category cat) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -47,6 +56,10 @@ public class PageFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Get news by category
+     * @param category category
+     */
     protected void createNewsByCategory(final Category category)
     {
         Map<String,String> map = new HashMap<>();

@@ -24,7 +24,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Created by lenovo on 2016/8/30.
  */
+
+/**
+ * Get news class
+ */
 public class NewsGetter {
+    /**
+     * Get category by webpage content
+     * @param content webpage content
+     * @return Category list
+     */
     public static List<Category> getCategory(String content)
     {
         List<Category> result = null;
@@ -51,6 +60,11 @@ public class NewsGetter {
         return result;
     }
 
+    /**
+     * Get news by webpage content
+     * @param content webpage content
+     * @return News list
+     */
     public static List<News> getNewsByCategory(String content)
     {
         List<News> result = null;

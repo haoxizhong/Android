@@ -66,12 +66,20 @@ class OrmHelper extends OrmLiteSqliteOpenHelper
     }
 }
 
+/**
+ * SQLHelper class
+ */
 public class SQLHelper
 {
     public static Dao<Category,String> categoryDB = null;
     public static Dao<News,String> newsDB = null;
     public static Dao<ImgHelper,String> imageDB = null;
     public static OrmLiteSqliteOpenHelper helper = null;
+
+    /**
+     * Create new database
+     * @param context
+     */
     public static void onCreate(Context context)
     {
         helper = new OrmHelper(context, "database.db", null , 5);
@@ -102,6 +110,10 @@ public class SQLHelper
     {
     }*/
 
+    /**
+     * Save category
+     * @param arr category list
+     */
     public static void saveCategory(List<Category> arr)
     {
         for (int a=0;a<arr.size();a++)
@@ -119,6 +131,10 @@ public class SQLHelper
         }
     }
 
+    /**
+     * Save one category
+     * @param category category
+     */
     public static void saveCategory(Category category)
     {
         try {
@@ -130,6 +146,10 @@ public class SQLHelper
         }
     }
 
+    /**
+     * Save news
+     * @param arr News list
+     */
     public static void saveNews(List<News> arr)
     {
         for (int a=0;a<arr.size();a++)
@@ -147,6 +167,10 @@ public class SQLHelper
         }
     }
 
+    /**
+     * Save one new
+     * @param news news
+     */
     public static void saveNews(News news)
     {
         try {
@@ -158,6 +182,10 @@ public class SQLHelper
         }
     }
 
+    /**
+     * Save image
+     * @param img image
+     */
     public static void saveImage(ImgHelper img)
     {
         try {
@@ -169,6 +197,10 @@ public class SQLHelper
         }
     }
 
+    /**
+     * Read Prefer category
+     * @return category list
+     */
     public static List<Category> readPreferCategory()
     {
         try {
@@ -182,6 +214,10 @@ public class SQLHelper
         }
     }
 
+    /**
+     * Read all category
+     * @return category list
+     */
     public static List<Category> readCategory()
     {
         try {
@@ -194,6 +230,11 @@ public class SQLHelper
         }
     }
 
+    /**
+     * Read news by category
+     * @param category category
+     * @return news list
+     */
     public static List<News> readNews(Category category) {
         //Log.d("test",category.toString());
         try
@@ -207,6 +248,10 @@ public class SQLHelper
         }
     }
 
+    /**
+     * read Prefer news
+     * @return prefer news list
+     */
     public static List<News> readPreferNews() {
         //Log.d("test",category.toString());
         try
@@ -220,6 +265,11 @@ public class SQLHelper
         }
     }
 
+    /**
+     * Read image
+     * @param url URL
+     * @return image content
+     */
     public static Bitmap readImage(String url)
     {
         //Log.d("Image",url);

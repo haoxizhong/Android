@@ -32,6 +32,10 @@ import okhttp3.Response;
 /**
  * Created by lenovo on 2016/9/4.
  */
+
+/**
+ * The list adapter class
+ */
 public class ListAdapter extends BaseAdapter{
     static Context context = null;
     public Category category = null;
@@ -116,7 +120,11 @@ public class ListAdapter extends BaseAdapter{
         return view;
     }
 
-
+    /**
+     * Generate the news by category
+     * @param category The category needed to be done
+     * @param id the news id
+     */
     protected void createNewsByCategory(final Category category,final long id) {
         Map<String, String> map = new HashMap<>();
         map.put("locale", "en");

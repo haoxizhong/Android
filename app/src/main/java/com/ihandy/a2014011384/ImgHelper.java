@@ -12,10 +12,19 @@ import java.io.ByteArrayOutputStream;
  * Created by lenovo on 2016/9/6.
  */
 
+/**
+ * The image class
+ */
 @DatabaseTable(tableName = "Image")
 public class ImgHelper {
+    /**
+     * The url of image
+     */
     @DatabaseField(id = true)
     public String url;
+    /**
+     * The image content
+     */
     @DatabaseField
     public String image;
     ImgHelper(){}

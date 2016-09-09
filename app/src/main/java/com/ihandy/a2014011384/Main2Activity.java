@@ -30,12 +30,20 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import okhttp3.internal.Util;
 
+/**
+ * The second activity
+ */
+
 public class Main2Activity extends AppCompatActivity{
     static News news = null;
     private static final String appid = "wx01cee72f6183d77d";
     private static IWXAPI api = null;
     MenuItem love;
 
+    /**
+     * Change the status of icon
+     * @param prefer whther to like
+     */
     void updateStatus(int prefer)
     {
         if (prefer == 0) love.setIcon(R.drawable.love_false);
@@ -86,6 +94,10 @@ public class Main2Activity extends AppCompatActivity{
         //web.loadData();
     }
 
+    /**
+     * Share to WX
+     * @param flag Share to where
+     */
     void Share(int flag)
     {
         if (api.isWXAppInstalled() == false)
